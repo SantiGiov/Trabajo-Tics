@@ -1,0 +1,210 @@
+//Proyecto Personal
+//Incluimos el paquete o librería Servo.h
+#include <Servo.h>
+
+Servo servomecatronicos;
+%Definimos los elementos del joystick y en donde irán en el arduino
+const int pinJoystickX = A0; // Pin analógico para el eje X del joystick
+const int pinJoystickY = A1; // Pin analógico para el eje Y del joystick
+
+void setup() {
+  servomecatronicos.attach(3); // Conecta el servo al pin 3
+}
+
+void loop() {
+  // Lee los valores del joystick
+  int valorX = analogRead(pinJoystickX); // Lee el valor del eje X
+  int valorY = analogRead(pinJoystickY); // Lee el valor del eje Y
+
+  // Mapea los valores del joystick al rango de 0 a 180 grados
+  int angulo = map(valorX, 0, 1023, 0, 180);
+
+  // Mueve el servo al ángulo calculado
+  servomecatronicos.write(angulo);
+
+  // Pequeña pausa para estabilizar el servo
+  delay(15);
+}
+
+//Problema del semáforo
+//Definimos las conecciones con Arduino
+void setup()
+{
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(9, OUTPUT);
+  
+}
+//Creamos el loop con el que titilarán los LEDs
+void loop()
+{
+  digitalWrite(13, HIGH);
+  digitalWrite(9, HIGH);
+  delay(3000); // Wait for 1000 millisecond(s)
+  digitalWrite(13, LOW);
+  delay(500); // Wait for 1000 millisecond(s)
+  digitalWrite(12, HIGH);
+  delay(1000); // Wait for 1000 millisecond(s)
+  digitalWrite(12, LOW);
+  digitalWrite(9, LOW);
+  delay(500); // Wait for 1000 millisecond(s)
+  digitalWrite(11, HIGH);
+  digitalWrite(10, HIGH);
+  delay(3000); // Wait for 1000 millisecond(s)
+  digitalWrite(11, LOW);
+  digitalWrite(10, LOW);
+  delay(500); // Wait for 1000 millisecond(s)
+
+  
+}
+
+//Ultra sonido y 3 Leds
+void loop() {
+long duration , distance ;
+//Inicia el pulso ultras nico
+digitalWrite( trigPin , LOW ) ;
+delayMicroseconds( 2 ) ;
+digitalWrite( trigPin , HIGH ) ;
+delayMicroseconds( 10 ) ;
+digitalWrite( trigPin , LOW) ;
+//Mide la duración del eco
+duration = pulseIn( echoPin , HIGH ) ;
+// Calcula la distancia
+distance = ( duration / 2 ) / 29.1 ;
+Serial.print( ” Distancia: ” ) ;
+Serial.print( distance ) ;
+Serial.println( ” cm” ) ;
+// Determina que LED encender basado en la distancia medida
+if( distance < 5 ) {
+// S i l a d i s t a n c i a e s menor a 10cm
+digitalWrite( ledPin3 , HIGH ) ;
+digitalWrite( ledPin2 , LOW) ;
+digitalWrite( ledPin1 , LOW) ;
+// Continuación: Encender LEDs según la distancia
+} else if ( distance < 15 ) {
+digitalWrite( ledPin2 , HIGH ) ;
+digitalWrite( ledPin3 , LOW) ;
+digitalWrite( ledPin1 , LOW) ;
+} else if ( distance < 30 ) {
+digitalWrite( ledPin1 , HIGH ) ;
+digitalWrite( ledPin2 , LOW) ;
+digitalWrite( ledPin3 , LOW) ;
+} else {
+// Si la distancia es mayor a 30cm , apaga todos los LEDs
+digitalWrite( ledPin1 , LOW) ;
+digitalWrite( ledPin2 , LOW) ;
+digitalWrite( ledPin3 , LOW) ;
+}
+delay( 500 ) ; // Espera medio segundo para la próxima medición
+}
+
+//Joystick y 4 LEDs
+// Pines para los LEDs
+const int ledUp = 2;    // LED para "arriba"
+const int ledDown = 3;  // LED para "abajo"
+const int ledLeft = 4;  // LED para "izquierda"
+const int ledRight = 5; // LED para "derecha"
+
+// Pines para el joystick
+const int joyX = A0; // Eje X
+const int joyY = A1; // Eje Y
+const int joyButton = 6; // Botón SW
+
+void setup() {
+  pinMode(ledUp, OUTPUT);
+  pinMode(ledDown, OUTPUT);
+  pinMode(ledLeft, OUTPUT);
+  pinMode(ledRight, OUTPUT);
+
+  pinMode(joyX, INPUT);
+  pinMode(joyY, INPUT);
+  pinMode(joyButton, INPUT_PULLUP); // Configurar el botón como entrada con resistencia de pull-up
+}
+
+void loop() {
+  int xValue = analogRead(joyX);
+  int yValue = analogRead(joyY);
+  bool buttonPressed = digitalRead(joyButton) == LOW; // Leer el estado del botón
+
+  // Desactivar todos los LEDs antes de cambiar el estado
+  digitalWrite(ledUp, LOW);
+  digitalWrite(ledDown, LOW);
+  digitalWrite(ledLeft, LOW);
+  digitalWrite(ledRight, LOW);
+
+  // Encender todos los LEDs si el botón está presionado
+  if (buttonPressed) {
+    digitalWrite(ledUp, HIGH);
+    digitalWrite(ledDown, HIGH);
+    digitalWrite(ledLeft, HIGH);
+    digitalWrite(ledRight, HIGH);
+  } else {
+    // Leer el joystick y encender el LED correspondiente si el botón no está presionado
+    if (xValue < 400) { // Izquierda
+      digitalWrite(ledLeft, HIGH);
+    } else if (xValue > 600) { // Derecha
+      digitalWrite(ledRight, HIGH);
+    }
+
+    if (yValue < 400) { // Arriba
+      digitalWrite(ledUp, HIGH);
+    } else if (yValue > 600) { // Abajo
+      digitalWrite(ledDown, HIGH);
+    }
+  }
+
+  delay(100); // Pequeña pausa para estabilidad
+}
+
+//Sensor de sonido y 8 LEDs
+// Definición de los pines
+int SensorSonido = 1; // El pin 1 para el sensor de sonido KY038
+
+// Pines para los LEDs
+int LED1 = 2;
+int LED2 = 3;
+int LED3 = 4;
+int LED4 = 5;
+int LED5 = 6;
+int LED6 = 7;
+int LED7 = 8;
+int LED8 = 9;
+
+// Variable para almacenar el estado del sensor de sonido
+int ESTADO = 0;
+
+void setup(){
+  // Configuración del pin del sensor como entrada
+  pinMode(SensorSonido, INPUT);
+
+  // Configuración de los pines de los LEDs como salidas
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
+  pinMode(LED4, OUTPUT);
+  pinMode(LED5, OUTPUT);
+  pinMode(LED6, OUTPUT);
+  pinMode(LED7, OUTPUT);
+  pinMode(LED8, OUTPUT);
+}
+
+void loop(){
+  // Lectura del estado del sensor de sonido
+  ESTADO = digitalRead(SensorSonido);
+
+  // Si el sensor detecta sonido (salida alta)
+  if (ESTADO == 1){
+    // Enciende los LEDs en secuencia
+    for(int i = LED1; i <= LED8; i++){
+      digitalWrite(i, HIGH);
+      delay(10);
+    }
+    // Apaga los LEDs en secuencia inversa
+    for(int i = LED8; i >= LED1; i--){
+      digitalWrite(i, LOW);
+      delay(10);
+    }
+  }
+}
